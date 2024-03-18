@@ -45,7 +45,6 @@ def validate_eth_address(input_string: str) -> bool:
     else:
         raise ValueError('Please input a valid ETH address!')
     
-
 def export_to_csv(df, filename):
     '''
     Export a pandas DataFrame to a CSV file.
@@ -68,7 +67,7 @@ def export_to_csv(df, filename):
             print('Please input "y" or "n".')
 
 def add_wallets():
-
+    
     wallet_list = []
 
     try:
@@ -97,13 +96,14 @@ def menu():
     message = 'Your holdings' if len(input_address) > 0 else 'You cannot see your holdings since you did not provide an address.'
     print(f'1. {message}')
 
-    print('2. Whales holdings (from json)')
+    print('2. Summary of all wallets')
+    print('3. Detailed wallets holdings')
+    # TODO: Set threshold in the interface. Needs to modify the 'threshold' variable in functions.py
+    # print('9. Set threshold (default: $5.000)')
     print('0. Exit')
 
 # Main menu options
 def option1():
-    # TODO: progress bar
-
     # If user provided input then validate ETH address
     if len(input_address) == 0: 
         print('You did not provide an address. Please rerun with --address=[your_address]')    
@@ -113,9 +113,15 @@ def option1():
         print(wallet.dataframe)
         export_to_csv(wallet.dataframe, f'output/{wallet.address}_{wallet.label}_{formatted_now}.csv')
 
-
 def option2():
-    # TODO: progress bar
+    # TODO: fix duplicate values. Values are duplicated when multiple wallets are holding the same coinaddress on multiple chains (e.g. ETH).
+    df = add_wallets()
+    # Grouping by 'Category' and summing the 'Value' column
+    summed_df = df.groupby('CoinAddress', as_index=False).sum()
+    print(summed_df)
+    export_to_csv(summed_df, f'output/AllWhales_{formatted_now}.csv')
+
+def option3():
     data = add_wallets()
     print(data)
     export_to_csv(data, f'output/AllWhales_{formatted_now}.csv')
@@ -129,6 +135,8 @@ def main():
             option1()
         elif choice == '2':
             option2()
+        elif choice == '3':
+            option3()
         elif choice == '0':
             print('Exiting...')
             break

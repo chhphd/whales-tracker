@@ -2,6 +2,7 @@ import requests
 import pandas as pd
 
 class Wallet:
+
     def __init__(self, address, label):
         self.address = address
         self.label = label
@@ -48,6 +49,7 @@ class Wallet:
                 readable_balance = '{:.0f}'.format(float(balance.get('balanceUSD', '0')))
                 balance_usds.append(readable_balance)
 
+        
         # Create DataFrame
         df = pd.DataFrame({
             'Wallet': wallets,
@@ -61,4 +63,11 @@ class Wallet:
             'BalanceUSD': balance_usds
         })
 
-        return df    
+        # Set a threshold to filter out dust
+        threshold = 5000
+
+        # Filter the dataframe and output the filtered one
+        df['BalanceUSD'] = df['BalanceUSD'].apply(lambda x: float(x))
+        filtered_df = df[df['BalanceUSD'] >= threshold]
+
+        return filtered_df
