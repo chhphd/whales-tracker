@@ -20,27 +20,23 @@ Follow these steps to set up the project:
 
 1. Create a virtual environment:
 
-    For macOS:
     ```bash
+    # For macOS
     python3 -m venv .venv
-    ```
-
-    For Windows:
-    ```bash
+    # or for Windows
     py -m venv .venv
+
     ```
 
-2. Activate the virtual environment:
+2. Activate the virtual environment: 
 
-    For macOS:
     ```bash
+    # for macOS:
     source .venv/bin/activate
-    ```
-
-    For Windows:
-    ```bash
+    # or for Windows
     \.venv\Scripts\activate
     ```
+
 
 3. Install the requirements: 
 
@@ -55,12 +51,10 @@ Providing your address is completely optional. Use it only if you want to see yo
 
 For Windows:
 ```bash
-python wt.py
-python wt.py --address=[your address]
-```
-
-For Mac:
-```bash
+# for macOS
 python3 wt.py
 python3 wt.py --address=[your address]
+# or for Windows
+python wt.py
+python wt.py --address=[your address]
 ```
