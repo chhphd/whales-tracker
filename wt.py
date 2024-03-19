@@ -66,10 +66,15 @@ def export_to_csv(df, filename):
         else:
             print('Please input "y" or "n".')
 
-def add_wallets():
-    
-    wallet_list = []
+def add_wallets() -> pd.DataFrame:
+    """
+    Concatenates all wallets in 'wallets.json'.
 
+    Returns:
+        A large dataframe with duplicated values containing all positions of all wallets.
+
+    """
+    # TODO: fix duplicate values. Values are duplicated when multiple wallets are holding the same coinaddress on multiple chains (e.g. ETH).
     try:
         # Load JSON file
         with open('wallets.json', 'r') as f:
@@ -77,8 +82,9 @@ def add_wallets():
 
     except FileNotFoundError:
         print('File not found!')    
-
-    # Loop through each address
+    
+    # Loop through each address and add to lists
+    wallet_list = []
     for item in wallets:
         wallet = Wallet(address=item['wallet'], label=item['label'])
         wallet_list.append(wallet.dataframe)
@@ -97,7 +103,6 @@ def menu():
     print(f'1. {message}')
 
     print('2. Summary of all wallets')
-    print('3. Detailed wallets holdings')
     # TODO: Set threshold in the interface. Needs to modify the 'threshold' variable in functions.py
     # print('9. Set threshold (default: $5.000)')
     print('0. Exit')
@@ -114,17 +119,13 @@ def option1():
         export_to_csv(wallet.dataframe, f'output/{wallet.address}_{wallet.label}_{formatted_now}.csv')
 
 def option2():
-    # TODO: fix duplicate values. Values are duplicated when multiple wallets are holding the same coinaddress on multiple chains (e.g. ETH).
-    df = add_wallets()
-    # Grouping by 'Category' and summing the 'Value' column
-    summed_df = df.groupby('CoinAddress', as_index=False).sum()
-    print(summed_df)
-    export_to_csv(summed_df, f'output/AllWhales_{formatted_now}.csv')
-
-def option3():
-    data = add_wallets()
-    print(data)
-    export_to_csv(data, f'output/AllWhales_{formatted_now}.csv')
+    total = add_wallets()
+    # Create pivot table
+    pivot_df = total.pivot_table(values=['Wallet', 'Amount', 'BalanceUSD'], index=['Symbol'], aggfunc={'Wallet': 'count', 'Amount': 'sum', 'BalanceUSD': 'sum'}, margins=True, margins_name='Grand Total')
+    pivot_df['% total'] = (pivot_df['BalanceUSD']/(pivot_df['BalanceUSD'].sum()))*2*100 # no idea why do i need to multiply by 2 in order to get the correct result !
+    # Print the sorted pivot
+    print(pivot_df.sort_values(by='BalanceUSD', ascending=False))
+    export_to_csv(total, f'output/AllWhales_{formatted_now}.csv')
 
 # Main function
 def main():
@@ -135,8 +136,6 @@ def main():
             option1()
         elif choice == '2':
             option2()
-        elif choice == '3':
-            option3()
         elif choice == '0':
             print('Exiting...')
             break
@@ -147,7 +146,11 @@ def main():
 now = datetime.now()
 formatted_now = now.strftime('%Y%m%d_%H%M%S')
 
+# Format output for pandas
+pd.set_option('display.float_format', '{:.2f}'.format)
+
 # Program
 if __name__ == '__main__':
+    
     input_address = parser()
     main()

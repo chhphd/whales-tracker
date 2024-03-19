@@ -44,17 +44,17 @@ class Wallet:
                 symbols.append(balance['symbol'])
                 # decimals.append(int(balance['decimals']))
                 # prices.append(balance.get('price', None))
-                readable_amount = '{:.0f}'.format(int(balance['amount'])/10**(int(balance['decimals'])))
-                amounts.append(readable_amount)
-                readable_balance = '{:.0f}'.format(float(balance.get('balanceUSD', '0')))
-                balance_usds.append(readable_balance)
-
+                # readable_amount = format(int(balance['amount'])/10**(int(balance['decimals'])))
+                amounts.append(int(balance['amount'])/10**(int(balance['decimals'])))
+                # readable_balance = '{:.0f}'.format(float(balance.get('balanceUSD', '0')))
+                # readable_balance = format(int(balance.get('balanceUSD', '0')))
+                balance_usds.append(balance.get('balanceUSD', '0'))
         
         # Create DataFrame
         df = pd.DataFrame({
             'Wallet': wallets,
-            # 'Chain ID': chain_ids,
-            'Chain Name': chain_names,
+            # 'ChainID': chain_ids,
+            'ChainName': chain_names,
             'CoinAddress': coin_addresses,
             'Symbol': symbols,
             # 'Decimals': decimals,
@@ -64,7 +64,7 @@ class Wallet:
         })
 
         # Set a threshold to filter out dust
-        threshold = 5000
+        threshold = 1000
 
         # Filter the dataframe and output the filtered one
         df['BalanceUSD'] = df['BalanceUSD'].apply(lambda x: float(x))
