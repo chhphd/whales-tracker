@@ -74,7 +74,6 @@ def add_wallets() -> pd.DataFrame:
         A large dataframe with duplicated values containing all positions of all wallets.
 
     """
-    # TODO: fix duplicate values. Values are duplicated when multiple wallets are holding the same coinaddress on multiple chains (e.g. ETH).
     try:
         # Load JSON file
         with open('wallets.json', 'r') as f:
@@ -86,7 +85,7 @@ def add_wallets() -> pd.DataFrame:
     # Loop through each address and add to lists
     wallet_list = []
     for item in wallets:
-        wallet = Wallet(address=item['wallet'], label=item['label'])
+        wallet = Wallet(address=item)
         wallet_list.append(wallet.dataframe)
 
     return pd.concat(wallet_list, ignore_index=True)

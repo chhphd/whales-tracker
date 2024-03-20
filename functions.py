@@ -3,9 +3,8 @@ import pandas as pd
 
 class Wallet:
 
-    def __init__(self, address, label):
+    def __init__(self, address):
         self.address = address
-        self.label = label
         self.balances = self.get_token_balances(self.address)
         self.dataframe = self.create_dataframe(self.balances, self.address)
     
@@ -64,7 +63,7 @@ class Wallet:
         })
 
         # Set a threshold to filter out dust
-        threshold = 1000
+        threshold = 5000
 
         # Filter the dataframe and output the filtered one
         df['BalanceUSD'] = df['BalanceUSD'].apply(lambda x: float(x))

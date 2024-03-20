@@ -1,17 +1,1 @@
-[
-  {
-    "id": 1,
-    "wallet": "0xeb2Eb5C68156250C368914761bB8F1208d56AcD0",
-    "label": "chicken"
-  },
-  {
-    "id": 2,
-    "wallet": "0xA86e3D1C80a750A310b484FB9bDc470753A7506F",
-    "label": "ah2"
-  },
-  {
-    "id": 3,
-    "wallet": "0x534A0076fb7c2b1f83FA21497429AD7ad3bD7587",
-    "label": "ah1"
-  }
-]
+["0xeb2Eb5C68156250C368914761bB8F1208d56AcD0","0xA86e3D1C80a750A310b484FB9bDc470753A7506F","0x534A0076fb7c2b1f83FA21497429AD7ad3bD7587"]
